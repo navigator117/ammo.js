@@ -990,3 +990,15 @@ interface btSoftBodyHelpers {
   btSoftBody CreateFromTriMesh([Ref] btSoftBodyWorldInfo worldInfo, float[] vertices, long[] triangles, long ntriangles, boolean randomizeConstraints);
   btSoftBody CreateFromConvexHull([Ref] btSoftBodyWorldInfo worldInfo, [Const] btVector3 vertices, long nvertices, boolean randomizeConstraints);
 };
+
+interface btWorldImporter {
+    void btWorldImporter(btDynamicsWorld world);
+};
+
+interface btBulletWorldImporter {
+    void btBulletWorldImporter(btDynamicsWorld world);
+
+    boolean	loadFileFromMemory(DOMString memoryBuffer, long len);
+};
+
+btBulletWorldImporter implements btWorldImporter;

@@ -5,7 +5,17 @@ from subprocess import Popen, PIPE, STDOUT
 
 # Definitions
 
-INCLUDES = ['btBulletDynamicsCommon.h', os.path.join('BulletCollision', 'CollisionShapes', 'btHeightfieldTerrainShape.h'), os.path.join('BulletCollision', 'CollisionDispatch', 'btGhostObject.h'), os.path.join('BulletDynamics', 'Character', 'btKinematicCharacterController.h'), os.path.join('BulletSoftBody', 'btSoftBody.h'), os.path.join('BulletSoftBody', 'btSoftRigidDynamicsWorld.h'), os.path.join('BulletSoftBody', 'btDefaultSoftBodySolver.h'), os.path.join('BulletSoftBody', 'btSoftBodyRigidBodyCollisionConfiguration.h'), os.path.join('BulletSoftBody', 'btSoftBodyHelpers.h'), os.path.join('BulletCollision', 'CollisionShapes', 'btShapeHull.h')]
+INCLUDES = ['btBulletDynamicsCommon.h',
+            os.path.join('BulletCollision', 'CollisionShapes', 'btHeightfieldTerrainShape.h'),
+            os.path.join('BulletCollision', 'CollisionDispatch', 'btGhostObject.h'),
+            os.path.join('BulletDynamics', 'Character', 'btKinematicCharacterController.h'),
+            os.path.join('BulletSoftBody', 'btSoftBody.h'),
+            os.path.join('BulletSoftBody', 'btSoftRigidDynamicsWorld.h'),
+            os.path.join('BulletSoftBody', 'btDefaultSoftBodySolver.h'),
+            os.path.join('BulletSoftBody', 'btSoftBodyRigidBodyCollisionConfiguration.h'),
+            os.path.join('BulletSoftBody', 'btSoftBodyHelpers.h'),
+            os.path.join('BulletCollision', 'CollisionShapes', 'btShapeHull.h'),
+            os.path.join('Serialize', 'BulletWorldImporter', 'btBulletWorldImporter.h')]
 
 # Startup
 
@@ -59,6 +69,7 @@ def build():
 
   emcc_args += ['-s', 'TOTAL_MEMORY=%d' % (64*1024*1024)] # default 64MB. Compile with ALLOW_MEMORY_GROWTH if you want a growable heap (slower though).
   #emcc_args += ['-s', 'ALLOW_MEMORY_GROWTH=1'] # resizable heap, with some amount of slowness
+  #emcc_args += ['-s', 'VERBOSE=1'] # verbose
 
   emcc_args += '-s EXPORT_NAME="Ammo" -s MODULARIZE=1'.split(' ')
 
@@ -115,19 +126,19 @@ def build():
 
     stage('Build bindings')
 
-    args = ['-I../src', '-c']
+    args = ['-I../src', '-I../Extras', '-c']
     for include in INCLUDES:
       args += ['-include', include]
     emscripten.Building.emcc('glue.cpp', args, 'glue.bc')
     assert(os.path.exists('glue.bc'))
 
     # Configure with CMake on Windows, and with configure on Unix.
-    cmake_build = emscripten.WINDOWS
+    cmake_build = True #emscripten.WINDOWS
 
     if cmake_build:
       if not os.path.exists('CMakeCache.txt'):
         stage('Configure via CMake')
-        emscripten.Building.configure([emscripten.PYTHON, os.path.join(EMSCRIPTEN_ROOT, 'emcmake'), 'cmake', '..', '-DBUILD_DEMOS=OFF', '-DBUILD_EXTRAS=OFF', '-DBUILD_CPU_DEMOS=OFF', '-DUSE_GLUT=OFF', '-DCMAKE_BUILD_TYPE=Release'])
+        emscripten.Building.configure([emscripten.PYTHON, os.path.join(EMSCRIPTEN_ROOT, 'emcmake'), 'cmake', '..', '-DBUILD_DEMOS=OFF', '-DBUILD_EXTRAS=ON', '-DBUILD_CPU_DEMOS=OFF', '-DUSE_GLUT=OFF', '-DCMAKE_BUILD_TYPE=Release'])
     else:
       if not os.path.exists('config.h'):
         stage('Configure (if this fails, run autogen.sh in bullet/ first)')
@@ -146,15 +157,19 @@ def build():
 
     if cmake_build:
       bullet_libs = [os.path.join('src', 'BulletSoftBody', 'libBulletSoftBody.a'),
-                    os.path.join('src', 'BulletDynamics', 'libBulletDynamics.a'),
-                    os.path.join('src', 'BulletCollision', 'libBulletCollision.a'),
-                    os.path.join('src', 'LinearMath', 'libLinearMath.a')]
+                     os.path.join('src', 'BulletDynamics', 'libBulletDynamics.a'),
+                     os.path.join('src', 'BulletCollision', 'libBulletCollision.a'),
+                     os.path.join('src', 'LinearMath', 'libLinearMath.a'),
+                     os.path.join('Extras', 'Serialize', 'BulletFileLoader', 'libBulletFileLoader.a'),
+                     os.path.join('Extras', 'Serialize', 'BulletWorldImporter', 'libBulletWorldImporter.a')]
     else:
       bullet_libs = [os.path.join('src', '.libs', 'libBulletSoftBody.a'),
-                    os.path.join('src', '.libs', 'libBulletDynamics.a'),
-                    os.path.join('src', '.libs', 'libBulletCollision.a'),
-                    os.path.join('src', '.libs', 'libLinearMath.a')]
-
+                     os.path.join('src', '.libs', 'libBulletDynamics.a'),
+                     os.path.join('src', '.libs', 'libBulletCollision.a'),
+                     os.path.join('src', '.libs', 'libLinearMath.a'),
+                     os.path.join('Extras', '.libs', 'libBulletFileLoader.a'),
+                     os.path.join('Extras', '.libs', 'libBulletWorldImporter.a')]
+    print bullet_libs
     emscripten.Building.link(['glue.bc'] + bullet_libs, 'libbullet.bc')
     assert os.path.exists('libbullet.bc')
 
