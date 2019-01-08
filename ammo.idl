@@ -998,7 +998,7 @@ interface btWorldImporter {
 interface btBulletWorldImporter {
     void btBulletWorldImporter(btDynamicsWorld world);
 
-    boolean	loadFileFromMemory(DOMString memoryBuffer, long len);
+    boolean	loadFileFromMemory(byte[] memoryBuffer, long len);
 };
 
 btBulletWorldImporter implements btWorldImporter;
