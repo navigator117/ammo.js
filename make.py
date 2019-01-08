@@ -156,19 +156,23 @@ def build():
     stage('Link')
 
     if cmake_build:
-      bullet_libs = [os.path.join('src', 'BulletSoftBody', 'libBulletSoftBody.a'),
-                     os.path.join('src', 'BulletDynamics', 'libBulletDynamics.a'),
-                     os.path.join('src', 'BulletCollision', 'libBulletCollision.a'),
-                     os.path.join('src', 'LinearMath', 'libLinearMath.a'),
-                     os.path.join('Extras', 'Serialize', 'BulletFileLoader', 'libBulletFileLoader.a'),
-                     os.path.join('Extras', 'Serialize', 'BulletWorldImporter', 'libBulletWorldImporter.a')]
+      bullet_libs = [
+        os.path.join('Extras', 'Serialize', 'BulletWorldImporter', 'libBulletWorldImporter.a'),
+        os.path.join('Extras', 'Serialize', 'BulletFileLoader', 'libBulletFileLoader.a'),
+        os.path.join('src', 'BulletSoftBody', 'libBulletSoftBody.a'),
+        os.path.join('src', 'BulletDynamics', 'libBulletDynamics.a'),
+        os.path.join('src', 'BulletCollision', 'libBulletCollision.a'),
+        os.path.join('src', 'LinearMath', 'libLinearMath.a')
+      ]
     else:
-      bullet_libs = [os.path.join('src', '.libs', 'libBulletSoftBody.a'),
-                     os.path.join('src', '.libs', 'libBulletDynamics.a'),
-                     os.path.join('src', '.libs', 'libBulletCollision.a'),
-                     os.path.join('src', '.libs', 'libLinearMath.a'),
-                     os.path.join('Extras', '.libs', 'libBulletFileLoader.a'),
-                     os.path.join('Extras', '.libs', 'libBulletWorldImporter.a')]
+      bullet_libs = [
+        os.path.join('Extras', '.libs', 'libBulletWorldImporter.a'),
+        os.path.join('Extras', '.libs', 'libBulletFileLoader.a'),
+        os.path.join('src', '.libs', 'libBulletSoftBody.a'),
+        os.path.join('src', '.libs', 'libBulletDynamics.a'),
+        os.path.join('src', '.libs', 'libBulletCollision.a'),
+        os.path.join('src', '.libs', 'libLinearMath.a')
+      ]
     print bullet_libs
     emscripten.Building.link(['glue.bc'] + bullet_libs, 'libbullet.bc')
     assert os.path.exists('libbullet.bc')
