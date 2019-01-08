@@ -126,6 +126,6 @@ Ammo().then(function(Ammo) {
   Ammo.destroy(quat);
   Ammo.destroy(transform);
 
-  console.log('ok.');
-  //print('ok.');
+  //console.log('ok.');
+  print('ok.');
 });
