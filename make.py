@@ -56,7 +56,7 @@ def build():
   wasm = 'wasm' in sys.argv
   closure = 'closure' in sys.argv
 
-  args = '-O3 --llvm-lto 1 -s NO_EXIT_RUNTIME=1 -s NO_FILESYSTEM=0 -s EXPORTED_RUNTIME_METHODS=["Pointer_stringify"]'
+  args = '-O3 --llvm-lto 1 -s NO_EXIT_RUNTIME=1 -s NO_FILESYSTEM=1 -s EXPORTED_RUNTIME_METHODS=["Pointer_stringify"]'
   if not wasm:
     args += ' -s WASM=0 -s AGGRESSIVE_VARIABLE_ELIMINATION=1 -s ELIMINATE_DUPLICATE_FUNCTIONS=1 -s SINGLE_FILE=1 -s LEGACY_VM_SUPPORT=1'
   else:
@@ -71,7 +71,6 @@ def build():
   emcc_args += ['-s', 'TOTAL_MEMORY=%d' % (64*1024*1024)] # default 64MB. Compile with ALLOW_MEMORY_GROWTH if you want a growable heap (slower though).
   #emcc_args += ['-s', 'ALLOW_MEMORY_GROWTH=1'] # resizable heap, with some amount of slowness
   #emcc_args += ['-s', 'VERBOSE=1'] # verbose
-
   emcc_args += '-s EXPORT_NAME="Ammo" -s MODULARIZE=1'.split(' ')
 
   target = 'ammo.js' if not wasm else 'ammo.wasm.js'

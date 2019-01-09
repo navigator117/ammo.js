@@ -49,8 +49,8 @@ def stage(text):
 if len(sys.argv) < 3:
   stage('regression tests')
 
-  for test in ['importer']:
-# for test in ['basics', 'wrapping', '2', '3', 'constraint', 'compoundShape', 'importer']:
+# for test in ['importer']:
+  for test in ['basics', 'wrapping', '2', '3', 'constraint', 'compoundShape', 'importer']:
     name = test + '.js'
     print '     ', name
     fullname = os.path.join('tests', name)
