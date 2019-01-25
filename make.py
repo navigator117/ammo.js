@@ -71,13 +71,13 @@ def build():
   emcc_args += ['-s', 'TOTAL_MEMORY=%d' % (64*1024*1024)] # default 64MB. Compile with ALLOW_MEMORY_GROWTH if you want a growable heap (slower though).
   #emcc_args += ['-s', 'ALLOW_MEMORY_GROWTH=1'] # resizable heap, with some amount of slowness
   #emcc_args += ['-s', 'VERBOSE=1'] # verbose
-  emcc_args += '-s EXPORT_NAME="Ammo" -s MODULARIZE=1'.split(' ')
+  emcc_args += '-s EXPORT_NAME="Bullet3d" -s MODULARIZE=1'.split(' ')
 
-  target = 'ammo.js' if not wasm else 'ammo.wasm.js'
+  target = 'libbullet3d.js' if not wasm else 'libbullet3d.wasm.js'
 
   print
   print '--------------------------------------------------'
-  print 'Building ammo.js, build type:', emcc_args
+  print 'Building libbullet3d.js, build type:', emcc_args
   print '--------------------------------------------------'
   print
 
@@ -188,7 +188,7 @@ def build():
     stage('wrap')
 
     wrapped = '''
-  // This is ammo.js, a port of Bullet Physics to JavaScript. zlib licensed.
+  // This is libbullet3d.js, a port of Bullet Physics to JavaScript. zlib licensed.
   ''' + open(temp).read()
 
     open(temp, 'w').write(wrapped)
