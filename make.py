@@ -193,6 +193,10 @@ def build():
 
     open(temp, 'w').write(wrapped)
 
+    stage('Copy files')
+
+    os.system('cp -rf ../../builds/* ../../../bullet3d-wasm/src/')
+
   finally:
     os.chdir(this_dir);
 
