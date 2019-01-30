@@ -1,4 +1,3 @@
-
 #!/usr/bin/python
 
 import os, sys, re, json, shutil, multiprocessing
@@ -55,16 +54,42 @@ def build():
 
   wasm = 'wasm' in sys.argv
   closure = 'closure' in sys.argv
+  wechat = 'wechat' in sys.argv
+  worker = 'worker' in sys.argv
+  web = 'web' in sys.argv
+  node = 'node' in sys.argv
+  shell = 'shell' in sys.argv  
 
   args = '-O3 --llvm-lto 1 -s NO_EXIT_RUNTIME=1 -s NO_FILESYSTEM=1 -s EXPORTED_RUNTIME_METHODS=["Pointer_stringify"]'
+  
   if not wasm:
     args += ' -s WASM=0 -s AGGRESSIVE_VARIABLE_ELIMINATION=1 -s ELIMINATE_DUPLICATE_FUNCTIONS=1 -s SINGLE_FILE=1 -s LEGACY_VM_SUPPORT=1'
   else:
     args += ''' -s WASM=1 -s BINARYEN_IGNORE_IMPLICIT_TRAPS=1 -s BINARYEN_TRAP_MODE="clamp"'''
+    
   if closure:
     args += ' --closure 1 -s IGNORE_CLOSURE_COMPILER_ERRORS=1' # closure complains about the bullet Node class (Node is a DOM thing too)
   else:
     args += ' -s NO_DYNAMIC_EXECUTION=1'
+
+  if wechat:
+    args += ' -s ENVIRONMENT=worker'
+    target = 'libbullet3d.wechat.js'    
+  elif worker:
+    args += ' -s ENVIRONMENT=worker'
+    target = 'libbullet3d.worker.js'
+  elif web:
+    args += ' -s ENVIRONMENT=web'
+    target = 'libbullet3d.web.js'
+  elif node:
+    args += ' -s ENVIRONMENT=node'
+    target = 'libbullet3d.node.js'
+  elif shell:
+    args += ' -s ENVIRONMENT=shell'
+    target = 'libbullet3d.shell.js'
+  else:
+    args += ' -s ENVIRONMENT=web'
+    target = 'libbullet3d.web.js'
 
   emcc_args = args.split(' ')
 
@@ -72,8 +97,6 @@ def build():
   #emcc_args += ['-s', 'ALLOW_MEMORY_GROWTH=1'] # resizable heap, with some amount of slowness
   #emcc_args += ['-s', 'VERBOSE=1'] # verbose
   emcc_args += '-s EXPORT_NAME="Bullet3d" -s MODULARIZE=1'.split(' ')
-
-  target = 'libbullet3d.js' if not wasm else 'libbullet3d.wasm.js'
 
   print
   print '--------------------------------------------------'
