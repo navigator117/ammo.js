@@ -91,6 +91,9 @@ def build():
     args += ' -s ENVIRONMENT=web'
     target = 'libbullet3d.web.js'
 
+  if wechat:
+    args += ' --pre-js ../wechat-prejs.js'
+
   emcc_args = args.split(' ')
 
   emcc_args += ['-s', 'TOTAL_MEMORY=%d' % (64*1024*1024)] # default 64MB. Compile with ALLOW_MEMORY_GROWTH if you want a growable heap (slower though).
