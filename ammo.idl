@@ -128,7 +128,9 @@ interface btCollisionObject {
   boolean isKinematicObject();
   boolean isStaticObject();
   boolean isStaticOrKinematicObject();
+  [Const] float getRestitution();
   void setRestitution(float rest);
+  [Const] float getFriction();    
   void setFriction(float frict);
   void setRollingFriction(float frict);
   [Ref] btTransform getWorldTransform();
@@ -437,6 +439,10 @@ interface btDbvtBroadphase {
   void btDbvtBroadphase();
 };
 
+interface btBroadphaseProxy {
+    attribute long m_collisionFilterGroup;
+	attribute long  m_collisionFilterMask;
+};
 
 // Dynamics
 
@@ -464,6 +470,7 @@ interface btRigidBody {
   void setCenterOfMassTransform([Const, Ref] btTransform xform);
   void setSleepingThresholds(float linear, float angular);
   void setDamping(float lin_damping, float ang_damping);
+  [Const] float getInvMass();
   void setMassProps(float mass, [Const, Ref] btVector3 inertia);
   void setLinearFactor([Const, Ref] btVector3 linearFactor);
   void applyTorque([Const, Ref] btVector3 torque);
@@ -479,6 +486,7 @@ interface btRigidBody {
   [Const, Ref] btVector3 getAngularVelocity();
   void setLinearVelocity([Const, Ref] btVector3 lin_vel);
   void setAngularVelocity([Const, Ref] btVector3 ang_vel);
+  [Const] btBroadphaseProxy getBroadphaseProxy();  
   btMotionState getMotionState();
   void setMotionState(btMotionState motionState);
   void setAngularFactor([Const, Ref] btVector3 angularFactor);

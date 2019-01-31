@@ -133,7 +133,7 @@ public:
 		CF_DISABLE_SPU_COLLISION_PROCESSING = 64//disable parallel/SPU processing
 	};
 
-	enum	CollisionObjectTypes
+	enum CollisionObjectTypes
 	{
 		CO_COLLISION_OBJECT =1,
 		CO_RIGID_BODY=2,
