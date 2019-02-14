@@ -415,6 +415,9 @@ interface btDispatcher {
 
 interface btCollisionDispatcher {
   void btCollisionDispatcher(btDefaultCollisionConfiguration conf);
+  void setNearCallback2(any nearCallback);
+  any  getNearCallback2();
+  void defaultNearCallback([Ref] btBroadphasePair collisionPair, [Ref] btCollisionDispatcher dispatcher, [Const, Ref] btDispatcherInfo dispatchInfo);
 };
 btCollisionDispatcher implements btDispatcher;
 
@@ -440,8 +443,14 @@ interface btDbvtBroadphase {
 };
 
 interface btBroadphaseProxy {
+    attribute any  m_clientObject;
     attribute long m_collisionFilterGroup;
-	attribute long  m_collisionFilterMask;
+	attribute long m_collisionFilterMask;
+};
+
+interface btBroadphasePair {
+    attribute btBroadphaseProxy m_pProxy0;
+    attribute btBroadphaseProxy m_pProxy1;
 };
 
 // Dynamics

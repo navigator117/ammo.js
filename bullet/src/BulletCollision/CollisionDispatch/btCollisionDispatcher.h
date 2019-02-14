@@ -123,14 +123,24 @@ public:
 	
 	virtual void	dispatchAllCollisionPairs(btOverlappingPairCache* pairCache,const btDispatcherInfo& dispatchInfo,btDispatcher* dispatcher) ;
 
-	void	setNearCallback(btNearCallback	nearCallback)
+	void setNearCallback(btNearCallback	nearCallback)
 	{
 		m_nearCallback = nearCallback; 
 	}
 
-	btNearCallback	getNearCallback() const
+	void setNearCallback2(void*	nearCallback)
+	{
+		m_nearCallback = (btNearCallback)nearCallback;
+	}    
+
+	btNearCallback getNearCallback() const
 	{
 		return m_nearCallback;
+	}
+
+	void* getNearCallback2() const
+	{
+		return (void*)m_nearCallback;
 	}
 
 	//by default, Bullet will use this near callback

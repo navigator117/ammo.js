@@ -99,6 +99,8 @@ def build():
   emcc_args += ['-s', 'TOTAL_MEMORY=%d' % (64*1024*1024)] # default 64MB. Compile with ALLOW_MEMORY_GROWTH if you want a growable heap (slower though).
   #emcc_args += ['-s', 'ALLOW_MEMORY_GROWTH=1'] # resizable heap, with some amount of slowness
   #emcc_args += ['-s', 'VERBOSE=1'] # verbose
+  emcc_args += ['-s', 'RESERVED_FUNCTION_POINTERS=32']
+  emcc_args += ['-s', 'EXTRA_EXPORTED_RUNTIME_METHODS=["addFunction"]']
   emcc_args += '-s EXPORT_NAME="Bullet3d" -s MODULARIZE=1'.split(' ')
 
   print
