@@ -119,6 +119,17 @@ public:
 			m_worldUserInfo = worldUserInfo;
 		}
 
+		void setInternalTickCallback2(void* cb, bool isPreTick)
+        {
+			if (isPreTick)
+			{
+				m_internalPreTickCallback = (btInternalTickCallback)cb;
+			} else
+			{
+				m_internalTickCallback = (btInternalTickCallback)cb;
+			}            
+        }
+        
 		void	setWorldUserInfo(void* worldUserInfo)
 		{
 			m_worldUserInfo = worldUserInfo;
