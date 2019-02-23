@@ -371,6 +371,11 @@ interface btConcaveShape {
 };
 btConcaveShape implements btCollisionShape;
 
+interface btEmptyShape {
+    void btEmptyShape();
+};
+btEmptyShape implements btConcaveShape;
+
 interface btStaticPlaneShape {
   void btStaticPlaneShape([Const, Ref] btVector3 planeNormal, float planeConstant);
 };
