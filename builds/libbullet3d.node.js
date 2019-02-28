@@ -1,3 +1,4 @@
+/** @nocompile */
 
   // This is libbullet3d.js, a port of Bullet Physics to JavaScript. zlib licensed.
   

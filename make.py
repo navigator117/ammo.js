@@ -58,7 +58,8 @@ def build():
   worker = 'worker' in sys.argv
   web = 'web' in sys.argv
   node = 'node' in sys.argv
-  shell = 'shell' in sys.argv  
+  shell = 'shell' in sys.argv
+  debug = 'debug' in sys.argv
 
   args = '-O3 --llvm-lto 1 -s NO_EXIT_RUNTIME=1 -s NO_FILESYSTEM=1 -s EXPORTED_RUNTIME_METHODS=["Pointer_stringify"]'
   
@@ -74,23 +75,27 @@ def build():
 
   if wechat:
     args += ' -s ENVIRONMENT=worker'
-    target = 'libbullet3d.wechat.js'    
+    target = 'libbullet3d.wechat'
   elif worker:
     args += ' -s ENVIRONMENT=worker'
-    target = 'libbullet3d.worker.js'
+    target = 'libbullet3d.worker'
   elif web:
     args += ' -s ENVIRONMENT=web'
-    target = 'libbullet3d.web.js'
+    target = 'libbullet3d.web'
   elif node:
     args += ' -s ENVIRONMENT=node'
-    target = 'libbullet3d.node.js'
+    target = 'libbullet3d.node'
   elif shell:
     args += ' -s ENVIRONMENT=shell'
-    target = 'libbullet3d.shell.js'
+    target = 'libbullet3d.shell'
   else:
     args += ' -s ENVIRONMENT=web'
-    target = 'libbullet3d.web.js'
-
+    target = 'libbullet3d.web'
+    
+  jstarget = os.path.join('..', '..', 'builds', target + '.js')
+  maptarget = os.path.join('..', '..', 'builds', target + '.js.map')
+  wasmtarget = os.path.join('..', '..', 'builds', target + '.wasm')
+  
   if wechat:
     args += ' --pre-js ../wechat-prejs.js'
 
@@ -207,27 +212,34 @@ def build():
 
     stage('emcc: ' + ' '.join(emcc_args))
 
-    temp = os.path.join('..', '..', 'builds', target)
-    emscripten.Building.emcc('libbullet.bc', emcc_args + ['--js-transform', 'python %s' % os.path.join('..', '..', 'bundle.py')],
-                            temp)
 
-    assert os.path.exists(temp), 'Failed to create script code'
+    emscripten.Building.emcc('libbullet.bc', emcc_args + ['--js-transform', 'python %s' % os.path.join('..', '..', 'bundle.py')],
+                             jstarget)
+
+    assert os.path.exists(jstarget), 'Failed to create script code'
 
     stage('wrap')
 
     wrapped = '''
   // This is libbullet3d.js, a port of Bullet Physics to JavaScript. zlib licensed.
-  ''' + open(temp).read()
+  ''' + open(jstarget).read()
 
-    open(temp, 'w').write(wrapped)
+    open(jstarget, 'w').write(wrapped)
 
     stage('Copy files')
+    
+    if node:
+      os.system("gsed -i '1i\/** @nocompile */' " + jstarget)
+      
+    os.system('cp -rf ' + jstarget + ' ../../../bullet3d-wasm/src/')
 
-    os.system('cp -rf ../../builds/* ../../../bullet3d-wasm/src/')
-
+    if debug:      
+      os.system('cp -rf ' + maptarget + ' ../../../bullet3d-wasm/src/')
+      
+    os.system('cp -rf ' + wasmtarget + ' ../../../bullet3d-wasm/src/')
+      
   finally:
     os.chdir(this_dir);
 
 if __name__ == '__main__':
   build()
-
