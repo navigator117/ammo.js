@@ -430,6 +430,7 @@ interface btOverlappingPairCallback {
 };
 
 interface btOverlappingPairCache {
+  [Const] long getNumOverlappingPairs();
   void setInternalGhostPairCallback(btOverlappingPairCallback ghostPairCallback);
 };
 
