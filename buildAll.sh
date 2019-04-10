@@ -1,8 +1,8 @@
 # !/bin/bash
 echo "USAGE: ./buildAll.sh"
 
-python make.py wechat wasm
-python make.py worker wasm
-python make.py web wasm
-python make.py node wasm
+python3 make.py wechat wasm
+python3 make.py worker wasm
+python3 make.py web wasm
+python3 make.py node wasm
 
