@@ -422,8 +422,9 @@ interface btCollisionDispatcher {
   void btCollisionDispatcher(btDefaultCollisionConfiguration conf);
   void setNearCallback2(any nearCallback);
   any  getNearCallback2();
+  void setNeedsResponseCallback(any nearCallback);
+  any  getNeedsResponseCallback();
   void defaultNearCallback([Ref] btBroadphasePair collisionPair, [Ref] btCollisionDispatcher dispatcher, [Const, Ref] btDispatcherInfo dispatchInfo);
-  boolean needsResponse([Const] btCollisionObject body0,[Const] btCollisionObject body1);
 };
 btCollisionDispatcher implements btDispatcher;
 

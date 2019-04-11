@@ -29,17 +29,18 @@ def which(program):
   return None
 
 def build():
-  EMSCRIPTEN_ROOT = os.environ.get('EMSCRIPTEN')
+  EMSCRIPTEN_ROOT = os.environ.get('EMSCRIPTEN_ROOT')
   if not EMSCRIPTEN_ROOT:
     emcc = which('emcc')
     EMSCRIPTEN_ROOT = os.path.dirname(emcc)
-
+    print (EMSCRIPTEN_ROOT)
   if not EMSCRIPTEN_ROOT:
     print ("ERROR: EMSCRIPTEN_ROOT environment variable (which should be equal to emscripten's root dir) not found")
     sys.exit(1)
 
   sys.path.append(EMSCRIPTEN_ROOT)
   import tools.shared as emscripten
+  print (emscripten.PYTHON)
 
   # Settings
 

@@ -37,6 +37,7 @@ class btCollisionDispatcher;
 ///user can override this nearcallback for collision filtering and more finegrained control over collision detection
 typedef void (*btNearCallback)(btBroadphasePair& collisionPair, btCollisionDispatcher& dispatcher, const btDispatcherInfo& dispatchInfo);
 
+typedef bool (*btNeedsResponseCallback)(const btCollisionObject* body0,const btCollisionObject* body1);
 
 ///btCollisionDispatcher supports algorithms that handle ConvexConvex and ConvexConcave collision pairs.
 ///Time of Impact, Closest Points and Penetration Depth.
@@ -52,6 +53,8 @@ protected:
 	btManifoldResult	m_defaultManifoldResult;
 
 	btNearCallback		m_nearCallback;
+
+	btNeedsResponseCallback     m_needsResponseCallback;
 	
 	btPoolAllocator*	m_collisionAlgorithmPoolAllocator;
 
@@ -128,19 +131,29 @@ public:
 		m_nearCallback = nearCallback; 
 	}
 
-	void setNearCallback2(void*	nearCallback)
-	{
-		m_nearCallback = (btNearCallback)nearCallback;
-	}    
-
 	btNearCallback getNearCallback() const
 	{
 		return m_nearCallback;
 	}
 
+	void setNearCallback2(void*	nearCallback)
+	{
+		m_nearCallback = (btNearCallback)nearCallback;
+	}        
+
 	void* getNearCallback2() const
 	{
 		return (void*)m_nearCallback;
+	}
+
+	void setNeedsResponseCallback(void*	callback)
+	{
+		m_needsResponseCallback = (btNeedsResponseCallback)callback;
+	}        
+
+	void* getNeedsResponseCallback() const
+	{
+		return (void*)m_needsResponseCallback;
 	}
 
 	//by default, Bullet will use this near callback

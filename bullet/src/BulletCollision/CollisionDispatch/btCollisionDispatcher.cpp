@@ -36,7 +36,8 @@ int gNumManifold = 0;
 
 btCollisionDispatcher::btCollisionDispatcher (btCollisionConfiguration* collisionConfiguration): 
 m_dispatcherFlags(btCollisionDispatcher::CD_USE_RELATIVE_CONTACT_BREAKING_THRESHOLD),
-	m_collisionConfiguration(collisionConfiguration)
+m_collisionConfiguration(collisionConfiguration),
+m_needsResponseCallback(NULL)
 {
 	int i;
 
@@ -165,6 +166,9 @@ bool	btCollisionDispatcher::needsResponse(const btCollisionObject* body0,const b
 	//no response between two static/kinematic bodies:
 	hasResponse = hasResponse &&
 		((!body0->isStaticOrKinematicObject()) ||(! body1->isStaticOrKinematicObject()));
+    if (this->m_needsResponseCallback != NULL) {
+        hasResponse = hasResponse && this->m_needsResponseCallback(body0, body1);
+    }
 	return hasResponse;
 }
 
